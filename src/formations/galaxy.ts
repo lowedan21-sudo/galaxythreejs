@@ -89,5 +89,6 @@ export function generateGalaxy(count: number, seed = 1): Formation {
   f.heroes.armTipB = [tipB[0] * SCALE, 0, tipB[1] * SCALE]
   f.heroes.coreBright = [0.08, 0.02, -0.05]
   f.spin = 0.02
+  f.hazeAvoidRadius = 1.1
   return f
 }

@@ -10,14 +10,19 @@
   box-sizing: border-box;
 }
 
-html,
+html {
+  background: var(--ground);
+  /* Lenis eases native scroll; keep the browser's own smoothing off. */
+  scroll-behavior: auto;
+}
+
 body {
   margin: 0;
-  height: 100%;
   background: var(--ground);
   color: var(--text);
   font-family: var(--display);
   -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
 }
 
 #scene {
@@ -26,6 +31,11 @@ body {
   width: 100%;
   height: 100%;
   display: block;
+}
+
+#scroll-space {
+  width: 1px;
+  pointer-events: none;
 }
 
 /* Text sits in the composition. No panels, no backplates. */
@@ -45,14 +55,13 @@ body {
   letter-spacing: 0.02em;
   color: var(--text);
   opacity: 0;
-  transform: translateY(12px);
-  transition: opacity 1.6s ease-out, transform 1.6s ease-out;
+  visibility: hidden;
+  will-change: opacity, transform;
   text-wrap: balance;
 }
 
-.chapter.is-visible {
-  opacity: 0.9;
-  transform: none;
+.chapter p {
+  margin: 0;
 }
 
 .chapter > .label {
@@ -64,8 +73,53 @@ body {
   white-space: nowrap;
 }
 
-/* Chapter 1: upper-left, above the arm that will stretch. */
+/* Per-chapter anchors: each formation's reserved negative space. */
 .chapter[data-chapter='1'] {
+  left: 8vw;
+  top: 20vh;
+}
+.chapter[data-chapter='2'] {
+  left: 60vw;
+  top: 50vh;
+  max-width: 20ch;
+}
+.chapter[data-chapter='3'] {
+  left: 40vw;
+  top: 50vh;
+}
+.chapter[data-chapter='4'] {
+  left: 10vw;
+  top: 46vh;
+}
+.chapter[data-chapter='5'] {
+  left: 60vw;
+  top: 42vh;
+}
+.chapter[data-chapter='6'] {
+  left: 10vw;
+  top: 66vh;
+}
+.chapter[data-chapter='7'] {
+  left: 38vw;
+  top: 18vh;
+}
+.chapter[data-chapter='8'] {
+  left: 38vw;
+  top: 66vh;
+}
+.chapter[data-chapter='9'] {
+  left: 10vw;
+  top: 16vh;
+}
+.chapter[data-chapter='10'] {
+  left: 10vw;
+  top: 44vh;
+}
+.chapter[data-chapter='11'] {
+  left: 40vw;
+  top: 72vh;
+}
+.chapter[data-chapter='12'] {
   left: 8vw;
   top: 20vh;
 }
@@ -95,17 +149,17 @@ html.no-webgl-support .no-webgl {
   display: grid;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .chapter {
-    transition: opacity 0.8s ease-out;
-    transform: none;
-  }
-}
-
 @media (max-width: 720px) {
-  .chapter[data-chapter='1'] {
+  .chapter {
+    max-width: 18ch;
+  }
+  .chapter[data-chapter='1'],
+  .chapter[data-chapter='12'] {
     left: 7vw;
     top: 14vh;
-    max-width: 18ch;
+  }
+  .chapter[data-chapter='2'] {
+    left: 8vw;
+    top: 16vh;
   }
 }

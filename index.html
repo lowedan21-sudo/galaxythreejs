@@ -20,12 +20,11 @@
   <body>
     <canvas id="scene" aria-hidden="true"></canvas>
 
-    <main class="chapters">
-      <section class="chapter" data-chapter="1">
-        <h2 class="label">Chapter 1 — The Beginning</h2>
-        <p>Everything begins with possibility.</p>
-      </section>
-    </main>
+    <!-- The words. Sections are created per playable chapter by ui/Text.ts. -->
+    <main id="chapters" class="chapters"></main>
+
+    <!-- Gives the document its height so native scroll drives the timeline. -->
+    <div id="scroll-space" aria-hidden="true"></div>
 
     <div class="no-webgl">
       <p>This piece needs WebGL 2, which your browser has turned off or does not support.</p>

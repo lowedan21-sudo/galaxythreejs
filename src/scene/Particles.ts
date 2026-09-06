@@ -85,7 +85,7 @@ export class Particles {
         uSizeScale: { value: 0.024 },
         uSpinA: { value: 0 },
         uSpinB: { value: 0 },
-        uArcAmp: { value: 0.9 },
+        uArcAmp: { value: 0.35 },
         uDriftAmp: { value: 1 },
         // Dense regions sum additively, so brightness per star falls as count rises.
         uIntensity: { value: Math.min(1, 0.55 * Math.sqrt(60_000 / count)) },

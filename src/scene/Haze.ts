@@ -70,9 +70,10 @@ export class Haze {
   /** Sample `count` positions from a formation, spread by every k-th particle. */
   setFormation(slot: 'A' | 'B', f: Formation): void {
     const target = (slot === 'A' ? this.posA : this.posB).array as Float32Array
-    // Walk the formation with a fixed stride, skipping the dense centre where
-    // the stars already sum to white and dust would only add a blue wash.
+    // Walk the formation with a fixed stride, skipping any region the
+    // formation marks as too dense for dust (the galaxy core).
     const stride = Math.max(1, Math.floor(f.count / (this.count * 2)))
+    const avoid2 = f.hazeAvoidRadius * f.hazeAvoidRadius
     let j = 0
     for (let i = 0; i < this.count; i++) {
       let tries = 0
@@ -85,7 +86,7 @@ export class Haze {
         y = f.position[j * 3 + 1]
         z = f.position[j * 3 + 2]
         tries++
-      } while (x * x + y * y + z * z < 1.2 && tries < 8)
+      } while (avoid2 > 0 && x * x + y * y + z * z < avoid2 && tries < 8)
       target[i * 3] = x
       target[i * 3 + 1] = y
       target[i * 3 + 2] = z

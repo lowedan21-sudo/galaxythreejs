@@ -29,4 +29,6 @@ URL flags while developing:
 
 ## Status
 
-M0 (foundation) is in: chapter 1 renders from one shader-driven `Points` object with bloom, a scripted camera with pointer parallax, and a background starfield. Next is M1: the morph engine driven by scroll, and the galaxy → river transition.
+M0 (foundation) and M1 (morph engine and timeline) are in. Chapters 1 and 2 play: native scroll eased by Lenis drives a master timeline, the phase mapper turns it into morph progress, camera blend, and text opacity, and the galaxy unwinds into the river of stars and back. Next is M2: the procedural formations for wave, seed, tree, bridge, city, planet, and eye.
+
+- `?T=1.6` jumps the timeline to a position while developing.
