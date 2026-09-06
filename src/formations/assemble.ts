@@ -59,6 +59,7 @@ export function assemble(f: Formation): Formation {
     flowParam: new Float32Array(n),
     heroes: f.heroes,
     spin: f.spin,
+    hazeAvoidRadius: f.hazeAvoidRadius,
   }
   for (let k = 0; k < n; k++) {
     const i = order[k]

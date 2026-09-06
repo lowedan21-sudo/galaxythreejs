@@ -29,6 +29,11 @@ export interface Formation {
   heroes: Partial<Record<HeroSlot, [number, number, number]>>
   /** Idle rotation speed about the formation's Y axis, radians per second. */
   spin: number
+  /**
+   * Haze stays out of a sphere of this radius around the origin. The galaxy
+   * uses it to keep dust off its already-white core; most formations leave it 0.
+   */
+  hazeAvoidRadius: number
 }
 
 export const HERO_SLOTS = [
@@ -83,5 +88,6 @@ export function allocFormation(count: number): Formation {
     flowParam: new Float32Array(count),
     heroes: {},
     spin: 0,
+    hazeAvoidRadius: 0,
   }
 }

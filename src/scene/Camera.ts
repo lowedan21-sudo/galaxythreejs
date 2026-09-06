@@ -7,16 +7,15 @@ export interface CameraPose {
 }
 
 /**
- * Scripted camera. M0 holds a single pose (chapter 1) with damped pointer
- * parallax. M1 adds per-chapter keyframes interpolated across the timeline;
- * M4 adds the Rest-phase drag orbit.
+ * Scripted camera. The timeline hands it a pose every frame (blended between
+ * chapter poses during Arrival, drifting during the chapter); this class adds
+ * damped pointer parallax on top. M4 adds the Rest-phase drag orbit.
  */
 export class Camera {
   readonly camera: THREE.PerspectiveCamera
-  private pose: CameraPose
+  private readonly pose: CameraPose
   private readonly pointer = new THREE.Vector2()
   private readonly pointerSmoothed = new THREE.Vector2()
-  private parallaxEnabled: boolean
   private readonly tmpPos = new THREE.Vector3()
   private readonly tmpRight = new THREE.Vector3()
   private readonly tmpUp = new THREE.Vector3()
@@ -24,19 +23,23 @@ export class Camera {
 
   constructor(aspect: number, pose: CameraPose) {
     this.camera = new THREE.PerspectiveCamera(pose.fov, aspect, 0.05, 400)
-    this.pose = pose
-    this.parallaxEnabled = !matchMedia('(prefers-reduced-motion: reduce)').matches && !matchMedia('(pointer: coarse)').matches
-    if (this.parallaxEnabled) {
+    this.pose = { position: pose.position.clone(), target: pose.target.clone(), fov: pose.fov }
+    const parallax = !matchMedia('(prefers-reduced-motion: reduce)').matches && !matchMedia('(pointer: coarse)').matches
+    if (parallax) {
       addEventListener('pointermove', (e) => {
         this.pointer.set((e.clientX / innerWidth) * 2 - 1, -((e.clientY / innerHeight) * 2 - 1))
       })
       addEventListener('pointerleave', () => this.pointer.set(0, 0))
     }
-    this.apply(1)
+    this.apply()
   }
 
-  setPose(pose: CameraPose): void {
-    this.pose = pose
+  /** Blend two poses into this camera's target pose, with an optional drift. */
+  blendPose(from: CameraPose, to: CameraPose, k: number, drift?: THREE.Vector3, driftAmount = 0): void {
+    this.pose.position.lerpVectors(from.position, to.position, k)
+    this.pose.target.lerpVectors(from.target, to.target, k)
+    this.pose.fov = from.fov + (to.fov - from.fov) * k
+    if (drift) this.pose.position.addScaledVector(drift, driftAmount)
   }
 
   setAspect(aspect: number): void {
@@ -44,14 +47,14 @@ export class Camera {
     this.camera.updateProjectionMatrix()
   }
 
-  /** Call once per frame. `dt` in seconds. */
+  /** Call once per frame after blendPose. `dt` in seconds. */
   update(dt: number): void {
     const k = 1 - Math.exp(-dt * 2.5)
     this.pointerSmoothed.lerp(this.pointer, k)
-    this.apply(k)
+    this.apply()
   }
 
-  private apply(_k: number): void {
+  private apply(): void {
     const { position, target, fov } = this.pose
     // Parallax: rotate the eye ±2° around the target based on pointer position.
     const yaw = this.pointerSmoothed.x * THREE.MathUtils.degToRad(2)
@@ -68,7 +71,7 @@ export class Camera {
 
     this.camera.position.copy(this.tmpPos)
     this.camera.lookAt(target)
-    if (this.camera.fov !== fov) {
+    if (Math.abs(this.camera.fov - fov) > 1e-3) {
       this.camera.fov = fov
       this.camera.updateProjectionMatrix()
     }

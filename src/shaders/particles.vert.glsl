@@ -85,6 +85,6 @@ void main() {
 
   vColor = uColorTable[type] * (1.0 + hero * 0.15);
   // Sub-pixel stars fade rather than pop.
-  vAlpha = bright * uIntensity * clamp(size / 1.5, 0.3, 1.0);
+  vAlpha = bright * uIntensity * clamp(size, 0.55, 1.0);
   vCore = hero;
 }
