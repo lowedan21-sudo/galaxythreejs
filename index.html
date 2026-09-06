@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>The Same Light</title>
+    <meta
+      name="description"
+      content="Twelve connected chapters in which one field of stars becomes a galaxy, a river, a wave, a seed, a tree, a bird, two hands, a bridge, a city, a planet, an eye, and a galaxy again."
+    />
+    <meta name="theme-color" content="#02040a" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Self-hosted WOFF2 replaces this in M4. -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap"
+    />
+  </head>
+  <body>
+    <canvas id="scene" aria-hidden="true"></canvas>
+
+    <main class="chapters">
+      <section class="chapter" data-chapter="1">
+        <h2 class="label">Chapter 1 — The Beginning</h2>
+        <p>Everything begins with possibility.</p>
+      </section>
+    </main>
+
+    <div class="no-webgl">
+      <p>This piece needs WebGL 2, which your browser has turned off or does not support.</p>
+    </div>
+
+    <script>
+      // Fail early and honestly if WebGL 2 is unavailable (poster fallback lands in M5).
+      (function () {
+        var c = document.createElement('canvas')
+        var gl = c.getContext('webgl2')
+        if (!gl) document.documentElement.classList.add('no-webgl-support')
+      })()
+    </script>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
